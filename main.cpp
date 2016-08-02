@@ -11,26 +11,6 @@ bool rubberbanding = false;
 bool antialiasing = false;
 bool drawn = false;
 
-
-//void clickButton(int button, int state, int x, int y){
-//    switch(button){
-//        case GLUT_LEFT_BUTTON:
-//            if (state == GLUT_DOWN)
-//                glColor3f(0, 1, 0);//green
-//            else
-//                glColor3f(1, 0, 0);//red
-//            break;
-//            
-//        case GLUT_RIGHT_BUTTON:
-//            if (state == GLUT_DOWN)
-//                glColor3f(0, 0, 1);//blue
-//            else
-//                glColor3f(1, 0, 0);//red
-//            break;
-//    }
-//    
-//}
-
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
     if (n == 1 && (type == GL_LINE_STRIP || type == GL_LINE_LOOP)){
@@ -65,11 +45,11 @@ void keyboard(unsigned char key, int x, int y){
             }
             break;
             
-        case 'c' : n = 0;break;
+        case 'p' : n = 0; k = 0; break;
             
         case 'l' : type = GL_LINE_STRIP; break;
             
-        case 'p' : type = GL_LINE_LOOP; drawn = true; break;
+        case 'c' : type = GL_LINE_LOOP; drawn = true; break;
             
         case 'v' : type = GL_POINTS; break;
     }
@@ -138,12 +118,7 @@ void mouse (int button, int state, int x, int y){
                     glutPostRedisplay();
                     
                 }
-                
-                else
-                    rubberbanding = false;
                 break;
-                
-            
         }
     }
     
@@ -184,40 +159,6 @@ int main(int argc, char ** argv){
     glutMainLoop();
     
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
