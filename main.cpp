@@ -14,17 +14,20 @@ bool drawn = false;
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
     if (n == 1 && (type == GL_LINE_STRIP || type == GL_LINE_LOOP)){
+        glColor3f(1, 1, 0);
         glBegin(GL_POINTS);
         glVertex2iv(vert[0]);
         glEnd();
     }
     
     glBegin(type);
+    glColor3f(1, 1, 0);
     for (int i = 0; i < n; i++)
         glVertex2iv(vert[i]);
     glEnd();
     
     glBegin(GL_POINTS);
+    glColor3f(1, 0, 0);
     for (int i = 0; i < k; i++)
         glVertex2iv(test_points[i]);
     glEnd();
@@ -45,7 +48,7 @@ void keyboard(unsigned char key, int x, int y){
             }
             break;
             
-        case 'p' : n = 0; k = 0; break;
+        case 'p' : n = 0; k = 0; drawn = false; type = GL_LINE_STRIP; break;
             
         case 'l' : type = GL_LINE_STRIP; break;
             
