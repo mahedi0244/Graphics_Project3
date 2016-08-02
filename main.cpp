@@ -10,6 +10,26 @@ type = GL_LINE_STRIP,v;
 bool rubberbanding = false;
 bool antialiasing = false;
 
+
+void clickButton(int button, int state, int x, int y){
+    switch(button){
+        case GLUT_LEFT_BUTTON:
+            if (state == GLUT_DOWN)
+                glColor3f(0, 1, 0);//green
+            else
+                glColor3f(1, 0, 0);//red
+            break;
+            
+        case GLUT_RIGHT_BUTTON:
+            if (state == GLUT_DOWN)
+                glColor3f(0, 0, 1);//blue
+            else
+                glColor3f(1, 0, 0);//red
+            break;
+    }
+    
+}
+
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
     if (n == 1 && (type == GL_LINE_STRIP || type == GL_LINE_LOOP)){
@@ -41,7 +61,7 @@ void keyboard(unsigned char key, int x, int y){
         
         case 'l' : type = GL_LINE_STRIP; break;
         
-        case 'p' : type = GL_LINE_LOOP; break;
+        case 'p' : type = GL_LINE_LOOP; glutMouseFunc(clickButton); break;
             
         case 'v' : type = GL_POINTS; break;
     }
@@ -108,6 +128,7 @@ void motion(int x, int y){
         glutPostRedisplay();
     }
 }
+
 
 int main(int argc, char ** argv){
         
