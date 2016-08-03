@@ -166,6 +166,7 @@ float dot_product(int selected_point[2], int point1[2], int point2[2]){
     return ((selected_point[0]-point1[0]) * (selected_point[0]-point2[0])) + ((selected_point[1]-point1[1]) * (selected_point[1]-point2[1]));
 }
 
+//calculate the angle between two vectors (defined by three points) from their dot products
 float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
     
     float numerator = dot_product(selected_point, point1, point2);
@@ -191,32 +192,14 @@ float cross_product(int selected_point[2], int point1[2], int point2[2]){
     return ((selected_point[0]-point1[0]) * (selected_point[1]-point2[1])) - ((selected_point[1]-point1[1]) * (selected_point[0]-point2[0]));
 }
 
-float cross_product_angle(int selected_point[2], int point1[2], int point2[2]){
-    float numerator = cross_product(selected_point, point1, point2);
-
-    float a = selected_point[0] - point1[0];
-    float b = selected_point[1] - point1[1];
-    float c = sqrt(a*a + b*b);
-    
-    float d = selected_point[0] - point2[0];
-    float e = selected_point[1] - point2[1];
-    float f = sqrt(d*d + e*e);
-    
-    float denominator = c * f;
-    
-    float param = numerator / denominator;
-    
-    return asin (param) * 180.0 / PI;
-}
-
 bool outside_test(int a){
     for (int i = 0; i < n-1; i++){
-        if (cross_product_angle(test_points[a], vert[i], vert[i+1]) > 0)
+        if (cross_product(test_points[a], vert[i], vert[i+1]) > 0)
             angle = angle + dot_product_angle(test_points[a], vert[i], vert[i+1]);
         else
             angle = angle - dot_product_angle(test_points[a], vert[i], vert[i+1]);
     }
-    if (cross_product_angle(test_points[a], vert[n-1], vert[0]) > 0)
+    if (cross_product(test_points[a], vert[n-1], vert[0]) > 0)
         angle = angle + dot_product_angle(test_points[a], vert[n-1], vert[0]);
     else
         angle = angle - dot_product_angle(test_points[a], vert[n-1], vert[0]);
