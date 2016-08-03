@@ -7,12 +7,18 @@
 #include <iostream>
 #define PI 3.14159265
 
-int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,
+int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,test_points_colors[100],
 type = GL_LINE_STRIP,v,t;
 
 bool rubberbanding = false;
 bool antialiasing = false;
 bool drawn = false;
+
+float colors[2][3] = {{0, 1, 0},{1, 0, 0}};
+
+float angle = 0;
+
+bool inside_test(int a);
 
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
@@ -29,10 +35,17 @@ void display(){
         glVertex2iv(vert[i]);
     glEnd();
     
+    
     glBegin(GL_POINTS);
-    glColor3f(1, 0, 0);
-    for (int i = 0; i < k; i++)
+    for (int i = 0; i < k; i++){
+        if (inside_test(i) == true ){
+            glColor3f(0, 1, 0);
+            
+        }
+        else
+            glColor3f(1, 0, 0);
         glVertex2iv(test_points[i]);
+    }
     glEnd();
     
     glutSwapBuffers();
@@ -140,8 +153,10 @@ void motion(int x, int y){
 }
 
 //value of a vector
-float vector_value(int vector[]){
-    return sqrt(vector[0]*vector[0] + vector[1]*vector[1]);
+float vector_value(int selected_point[2], int point[2]){
+    float a = selected_point[0] - point[0];
+    float b = selected_point[1] - point[1];
+    return sqrt(a*a + b*b);
 }
 
 //value of dot products
@@ -150,16 +165,40 @@ float dot_product(int selected_point[2], int point1[2], int point2[2]){
     return ((selected_point[0]-point1[0]) * (selected_point[0]-point2[0])) + ((selected_point[1]-point1[1]) * (selected_point[1]-point2[1]));
 }
 
-//float dot_product_angle(int (*selected_point)[2], int (*point1)[2], int (*point2)[2]){
-//    float numerator = dot_product(selected_point, point1, point2);
-//    int ** vector1 = line_vector(selected_point, point1);
-//    int ** vector2 = line_vector(selected_point, point2);
-//    
-//    
-//    float denominator = vector_value((*vector1)[2]) ;
-//    float param = numerator / denominator;
-//    return acos (param) * 180.0 / PI;
-//}
+float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
+    float numerator = dot_product(selected_point, point1, point2);
+
+    float a = selected_point[0] - point1[0];
+    float b = selected_point[1] - point1[1];
+    float c = sqrt(a*a + b*b);
+    
+    float d = selected_point[0] - point2[0];
+    float e = selected_point[1] - point2[1];
+    float f = sqrt(d*d + e*e);
+    
+    float denominator = c * f;
+    
+    float param = numerator / denominator;
+    std :: cout<<"angle is = "<< acos (param) * 180.0 / PI;
+    
+    return acos (param) * 180.0 / PI;
+}
+
+bool inside_test(int a){
+    for (int i = 0; i < n-1; i++)
+        angle = angle + dot_product_angle(test_points[a], vert[i], vert[i+1]);
+    angle = angle + dot_product_angle(test_points[a], vert[n-1], vert[0]);
+    if ( abs(angle - 360) < .1 ){
+        angle = 0;
+        return true;
+    }
+    else{
+        angle =  0;
+        return false;
+    }
+    
+    
+}
 
 int main(int argc, char ** argv){
     int test1[1][2] = {{0,0}};
@@ -167,6 +206,7 @@ int main(int argc, char ** argv){
     int test3[1][2] = {{2,4}};
 
     std :: cout<< dot_product(test1[0], test2[0], test3[0]);
+    std :: cout<< dot_product_angle(test1[0], test2[0], test3[0]);
     
     glutInit(& argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
