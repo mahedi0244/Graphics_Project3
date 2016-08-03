@@ -207,7 +207,7 @@ bool outside_test(int a){
     else
         angle = angle - dot_product_angle(test_points[a], vert[n-1], vert[0]);
     
-    if (abs(angle) <= .1){
+    if (abs(angle) <= .01){
         //debugging comment
         //std:: cout<<"total angle is "<<angle<<". Color should be red"<<std:: endl;
         angle = 0;
