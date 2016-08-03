@@ -63,7 +63,7 @@ void keyboard(unsigned char key, int x, int y){
             }
             break;
             
-        case 'p' : n = 0; k = 0; drawn = false; type = GL_LINE_STRIP; break;
+        case 'r' : n = 0; k = 0; drawn = false; type = GL_LINE_STRIP; break;
             
         case 'l' : type = GL_LINE_STRIP; break;
             
@@ -217,7 +217,7 @@ bool outside_test(int a){
     else
         angle = angle - dot_product_angle(test_points[a], vert[n-1], vert[0]);
     
-    if ( (abs(angle) <= 1 && abs(angle) -1)){
+    if (abs(angle) <= .1){
         std:: cout<<"total angle is "<<angle<<". Color should be red"<<std:: endl;
         angle = 0;
         return true;
@@ -228,7 +228,7 @@ bool outside_test(int a){
         return false;
     }
     
-    
+
 }
 
 int main(int argc, char ** argv){
@@ -244,7 +244,6 @@ int main(int argc, char ** argv){
     
     glClearColor(0.0,0.0,0.0,0.0);
     glColor3f(1, 1, 0);
-    
     
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
