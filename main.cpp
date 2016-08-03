@@ -7,7 +7,7 @@
 #include <iostream>
 #define PI 3.14159265
 
-int width = 400,height = 600,vert [100][2],test_points[100][2],n = 0,k=0,
+int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,
 type = GL_LINE_STRIP,v,t;
 
 bool rubberbanding = false;
@@ -140,38 +140,33 @@ void motion(int x, int y){
 }
 
 //value of a vector
-float vector_value(int **vector){
-    return sqrt(vector[0][0]*vector[0][0] + vector[0][1]*vector[0][1]);
-}
-
-//define a vector from two points
-int ** line_vector(int point1[][2], int point2[][2]){
-    int** new_vector = new int*[1];
-    for(int i = 0; i < 1; i++) {
-        new_vector[i] = new int[2];
-    }
-    new_vector[0][1] = point1[0][1] - point2[0][1];
-    new_vector[0][2] = point1[0][2] - point2[0][2];
-    
-    return new_vector;
+float vector_value(int vector[]){
+    return sqrt(vector[0]*vector[0] + vector[1]*vector[1]);
 }
 
 //value of dot products
-float dot_product(int selected_point[][2], int point1[][2], int point2[][2]){
-    int **vector1 = line_vector(selected_point, point1);
-    int **vector2 = line_vector(selected_point, point2);
-    
-    return vector1[0][1] * vector2[0][1] + vector1[0][2] * vector2[0][2];
+float dot_product(int selected_point[2], int point1[2], int point2[2]){
+
+    return ((selected_point[0]-point1[0]) * (selected_point[0]-point2[0])) + ((selected_point[1]-point1[1]) * (selected_point[1]-point2[1]));
 }
 
-float dot_product_angle(int selected_point[][2], int point1[][2], int point2[][2]){
-    float numerator = dot_product(selected_point, point1, point2);
-    float denominator = vector_value(line_vector(selected_point, point1)) * vector_value(line_vector(selected_point, point2));
-    float param = numerator / denominator;
-    return acos (param) * 180.0 / PI;
-}
+//float dot_product_angle(int (*selected_point)[2], int (*point1)[2], int (*point2)[2]){
+//    float numerator = dot_product(selected_point, point1, point2);
+//    int ** vector1 = line_vector(selected_point, point1);
+//    int ** vector2 = line_vector(selected_point, point2);
+//    
+//    
+//    float denominator = vector_value((*vector1)[2]) ;
+//    float param = numerator / denominator;
+//    return acos (param) * 180.0 / PI;
+//}
 
 int main(int argc, char ** argv){
+    int test1[1][2] = {{0,0}};
+    int test2[1][2] = {{2,2}};
+    int test3[1][2] = {{2,4}};
+
+    std :: cout<< dot_product(test1[0], test2[0], test3[0]);
     
     glutInit(& argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
