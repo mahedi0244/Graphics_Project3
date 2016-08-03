@@ -150,14 +150,6 @@ void motion(int x, int y){
     }
 }
 
-//value of a vector
-float vector_value(int selected_point[2], int point[2]){
-    
-    float a = selected_point[0] - point[0];
-    float b = selected_point[1] - point[1];
-    return sqrt(a*a + b*b);
-}
-
 //calculate dot products
 float dot_product(int selected_point[2], int point1[2], int point2[2]){
 
