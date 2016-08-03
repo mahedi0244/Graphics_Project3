@@ -33,7 +33,6 @@ void display(){
         glVertex2iv(vert[i]);
     glEnd();
     
-    
     glBegin(GL_POINTS);
     for (int i = 0; i < k; i++){
         if (outside_test(i) == false ){
@@ -43,8 +42,6 @@ void display(){
        else
             glColor3f(1, 0, 0);
         glVertex2iv(test_points[i]);
-           
-        
     }
     glEnd();
     
