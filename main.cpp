@@ -4,7 +4,7 @@
 #  include <GL/glut.h>
 #endif
 #include <math.h>
-#include <iostream>
+#include <stdlib.h>
 #define PI 3.14159265
 
 int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,
@@ -76,6 +76,7 @@ void keyboard(unsigned char key, int x, int y){
 }
 
 int findVertex(int x, int y){
+    
     int dx, dy;
     for (int i = 0; i < n; i++){
         dx = vert[i][0] - x;
@@ -88,6 +89,7 @@ int findVertex(int x, int y){
 }
 
 void mouse (int button, int state, int x, int y){
+    
     if (drawn == false){
         switch(button){
             case GLUT_LEFT_BUTTON:
@@ -134,7 +136,6 @@ void mouse (int button, int state, int x, int y){
                     test_points[t][0] = x;
                     test_points[t][1] = height - 1 - y;
                     glutPostRedisplay();
-                    
                 }
                 break;
         }
@@ -143,6 +144,7 @@ void mouse (int button, int state, int x, int y){
 }
 
 void motion(int x, int y){
+    
     if (rubberbanding){
         vert[v][0] = x;
         vert[v][1] = height - 1 - y;
@@ -152,18 +154,20 @@ void motion(int x, int y){
 
 //value of a vector
 float vector_value(int selected_point[2], int point[2]){
+    
     float a = selected_point[0] - point[0];
     float b = selected_point[1] - point[1];
     return sqrt(a*a + b*b);
 }
 
-//calculate of dot products
+//calculate dot products
 float dot_product(int selected_point[2], int point1[2], int point2[2]){
 
     return ((selected_point[0]-point1[0]) * (selected_point[0]-point2[0])) + ((selected_point[1]-point1[1]) * (selected_point[1]-point2[1]));
 }
 
 float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
+    
     float numerator = dot_product(selected_point, point1, point2);
     
     float a = selected_point[0] - point1[0];
@@ -181,10 +185,10 @@ float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
     return acos (param) * 180.0 / PI;
 }
 
-//calculate of cross products
+//calculate cross products
 float cross_product(int selected_point[2], int point1[2], int point2[2]){
     
-    return ((selected_point[0]-point1[0]) * (selected_point[1]-point2[1])) - ((selected_point[1]-point1[1]) * (selected_point[0]-point2[0]) );
+    return ((selected_point[0]-point1[0]) * (selected_point[1]-point2[1])) - ((selected_point[1]-point1[1]) * (selected_point[0]-point2[0]));
 }
 
 float cross_product_angle(int selected_point[2], int point1[2], int point2[2]){
@@ -218,17 +222,17 @@ bool outside_test(int a){
         angle = angle - dot_product_angle(test_points[a], vert[n-1], vert[0]);
     
     if (abs(angle) <= .1){
-        std:: cout<<"total angle is "<<angle<<". Color should be red"<<std:: endl;
+        //debugging comment
+        //std:: cout<<"total angle is "<<angle<<". Color should be red"<<std:: endl;
         angle = 0;
         return true;
     }
     else{
-        std:: cout<<"total angle is "<<angle<<". Color should be green"<<std:: endl;
+        //debugging comment
+        //std:: cout<<"total angle is "<<angle<<". Color should be green"<<std:: endl;
         angle =  0;
         return false;
     }
-    
-
 }
 
 int main(int argc, char ** argv){
@@ -259,6 +263,3 @@ int main(int argc, char ** argv){
     glutMainLoop();
     
 }
-
-
-
