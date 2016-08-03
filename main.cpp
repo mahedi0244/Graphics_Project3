@@ -7,18 +7,17 @@
 #include <iostream>
 #define PI 3.14159265
 
-int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,test_points_colors[100],
+int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,
 type = GL_LINE_STRIP,v,t;
 
 bool rubberbanding = false;
 bool antialiasing = false;
 bool drawn = false;
 
-float colors[2][3] = {{0, 1, 0},{1, 0, 0}};
-
 float angle = 0;
 
 bool inside_test(int a);
+bool outside_test(int a);
 
 void display(){
     glClear(GL_COLOR_BUFFER_BIT);
@@ -42,9 +41,11 @@ void display(){
             glColor3f(0, 1, 0);
             
         }
-        else
+       else
             glColor3f(1, 0, 0);
         glVertex2iv(test_points[i]);
+           
+        
     }
     glEnd();
     
@@ -134,7 +135,7 @@ void mouse (int button, int state, int x, int y){
                     t = k++;
                     test_points[t][0] = x;
                     test_points[t][1] = height - 1 - y;
-                    std :: cout<<"point is "<<test_points[t][0]<<" "<<test_points[t][1];
+                    //std :: cout<<"point is "<<test_points[t][0]<<" "<<test_points[t][1];
                     glutPostRedisplay();
                     
                 }
@@ -159,7 +160,7 @@ float vector_value(int selected_point[2], int point[2]){
     return sqrt(a*a + b*b);
 }
 
-//value of dot products
+//calculate of dot products
 float dot_product(int selected_point[2], int point1[2], int point2[2]){
 
     return ((selected_point[0]-point1[0]) * (selected_point[0]-point2[0])) + ((selected_point[1]-point1[1]) * (selected_point[1]-point2[1]));
@@ -167,6 +168,31 @@ float dot_product(int selected_point[2], int point1[2], int point2[2]){
 
 float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
     float numerator = dot_product(selected_point, point1, point2);
+    
+    float a = selected_point[0] - point1[0];
+    float b = selected_point[1] - point1[1];
+    float c = sqrt(a*a + b*b);
+    
+    float d = selected_point[0] - point2[0];
+    float e = selected_point[1] - point2[1];
+    float f = sqrt(d*d + e*e);
+    
+    float denominator = c * f;
+    
+    float param = numerator / denominator;
+    std :: cout<<"dot angle is = "<< acos (param) * 180.0 / PI<<std :: endl;
+    
+    return acos (param) * 180.0 / PI;
+}
+
+//calculate of cross products
+float cross_product(int selected_point[2], int point1[2], int point2[2]){
+    
+    return ((selected_point[0]-point1[0]) * (selected_point[1]-point2[1])) - ((selected_point[1]-point1[1]) * (selected_point[0]-point2[0]) );
+}
+
+float cross_product_angle(int selected_point[2], int point1[2], int point2[2]){
+    float numerator = cross_product(selected_point, point1, point2);
 
     float a = selected_point[0] - point1[0];
     float b = selected_point[1] - point1[1];
@@ -179,16 +205,43 @@ float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
     float denominator = c * f;
     
     float param = numerator / denominator;
-    std :: cout<<"angle is = "<< acos (param) * 180.0 / PI;
+    std :: cout<<"cross angle is = "<< asin (param) * 180.0 / PI;
+    std :: cout<<" between "<<selected_point[0]<<" ,"<<selected_point[1]<<" and";
+    std :: cout<<" between "<<point1[0]<<" ,"<<point1[1]<<" and";
+    std :: cout<<" between "<<point2[0]<<" ,"<<point2[1]<<std:: endl;
     
-    return acos (param) * 180.0 / PI;
+    return asin (param) * 180.0 / PI;
 }
 
 bool inside_test(int a){
+    for (int i = 0; i < n-1; i++){
+        if (cross_product_angle(test_points[a], vert[i], vert[i+1]) > 0)
+            angle = angle + dot_product_angle(test_points[a], vert[i], vert[i+1]);
+        else
+            angle = angle - dot_product_angle(test_points[a], vert[i], vert[i+1]);
+    }
+    if (cross_product_angle(test_points[a], vert[n-1], vert[0]) > 0)
+        angle = angle + dot_product_angle(test_points[a], vert[n-1], vert[0]);
+    else
+        angle = angle - dot_product_angle(test_points[a], vert[n-1], vert[0]);
+    
+    if ( abs(angle) == 360 ){
+        angle = 0;
+        return true;
+    }
+    else{
+        angle =  0;
+        return false;
+    }
+    
+    
+}
+
+bool outside_test(int a){
     for (int i = 0; i < n-1; i++)
-        angle = angle + dot_product_angle(test_points[a], vert[i], vert[i+1]);
-    angle = angle + dot_product_angle(test_points[a], vert[n-1], vert[0]);
-    if ( abs(angle - 360) < .1 ){
+        angle = angle + cross_product_angle(test_points[a], vert[i], vert[i+1]);
+    angle = angle + cross_product_angle(test_points[a], vert[n-1], vert[0]);
+    if ( angle == 0 ){
         angle = 0;
         return true;
     }
@@ -202,11 +255,12 @@ bool inside_test(int a){
 
 int main(int argc, char ** argv){
     int test1[1][2] = {{0,0}};
-    int test2[1][2] = {{2,2}};
-    int test3[1][2] = {{2,4}};
+    int test2[1][2] = {{-6,-2}};
+    int test3[1][2] = {{2,88}};
 
-    std :: cout<< dot_product(test1[0], test2[0], test3[0]);
-    std :: cout<< dot_product_angle(test1[0], test2[0], test3[0]);
+    //std :: cout<< cross_product(test1[0], test2[0], test3[0]);
+    std :: cout<< dot_product_angle(test1[0], test3[0], test2[0]);
+    std :: cout<< cross_product_angle(test1[0], test3[0], test2[0]);
     
     glutInit(& argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
