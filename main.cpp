@@ -1,7 +1,7 @@
 #ifdef __APPLE__
-#  include <GLUT/glut.h>
+#include <GLUT/glut.h>
 #else
-#  include <GL/glut.h>
+#include <GL/glut.h>
 #endif
 #include <math.h>
 #include <stdlib.h>
@@ -18,6 +18,7 @@ float angle = 0;
 bool outside_test(int a);
 
 void display(){
+    
     glClear(GL_COLOR_BUFFER_BIT);
     if (n == 1 && (type == GL_LINE_STRIP || type == GL_LINE_LOOP)){
         glColor3f(1, 1, 0);
@@ -51,6 +52,7 @@ void display(){
 }
 
 void keyboard(unsigned char key, int x, int y){
+    
     switch(key){
         case 'a' : antialiasing= !antialiasing;
             if (antialiasing){
@@ -140,7 +142,6 @@ void mouse (int button, int state, int x, int y){
                 break;
         }
     }
-    
 }
 
 void motion(int x, int y){
@@ -192,7 +193,9 @@ float cross_product(int selected_point[2], int point1[2], int point2[2]){
     return ((selected_point[0]-point1[0]) * (selected_point[1]-point2[1])) - ((selected_point[1]-point1[1]) * (selected_point[0]-point2[0]));
 }
 
+//returns true, if a point is outside of the closed polygon
 bool outside_test(int a){
+    
     for (int i = 0; i < n-1; i++){
         if (cross_product(test_points[a], vert[i], vert[i+1]) > 0)
             angle = angle + dot_product_angle(test_points[a], vert[i], vert[i+1]);
@@ -219,6 +222,7 @@ bool outside_test(int a){
 }
 
 int main(int argc, char ** argv){
+    
     int test1[1][2] = {{0,0}};
     int test2[1][2] = {{-6,-2}};
     int test3[1][2] = {{2,88}};
@@ -226,8 +230,8 @@ int main(int argc, char ** argv){
     glutInit(& argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(width, height);
-    glutInitWindowPosition(50, 100);
-    glutCreateWindow("Md_Mahedi_Rana");
+    glutInitWindowPosition(500, 100);
+    glutCreateWindow("Md_Mahedi_Rana_Project3");
     
     glClearColor(0.0,0.0,0.0,0.0);
     glColor3f(1, 1, 0);
