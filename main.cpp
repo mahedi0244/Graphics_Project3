@@ -13,10 +13,8 @@ type = GL_LINE_STRIP,v,t;
 bool rubberbanding = false;
 bool antialiasing = false;
 bool drawn = false;
-
 float angle = 0;
 
-bool inside_test(int a);
 bool outside_test(int a);
 
 void display(){
@@ -37,7 +35,7 @@ void display(){
     
     glBegin(GL_POINTS);
     for (int i = 0; i < k; i++){
-        if (inside_test(i) == true ){
+        if (outside_test(i) == false ){
             glColor3f(0, 1, 0);
             
         }
@@ -135,7 +133,6 @@ void mouse (int button, int state, int x, int y){
                     t = k++;
                     test_points[t][0] = x;
                     test_points[t][1] = height - 1 - y;
-                    //std :: cout<<"point is "<<test_points[t][0]<<" "<<test_points[t][1];
                     glutPostRedisplay();
                     
                 }
@@ -180,7 +177,6 @@ float dot_product_angle(int selected_point[2], int point1[2], int point2[2]){
     float denominator = c * f;
     
     float param = numerator / denominator;
-    std :: cout<<"dot angle is = "<< acos (param) * 180.0 / PI<<std :: endl;
     
     return acos (param) * 180.0 / PI;
 }
@@ -205,15 +201,11 @@ float cross_product_angle(int selected_point[2], int point1[2], int point2[2]){
     float denominator = c * f;
     
     float param = numerator / denominator;
-    std :: cout<<"cross angle is = "<< asin (param) * 180.0 / PI;
-    std :: cout<<" between "<<selected_point[0]<<" ,"<<selected_point[1]<<" and";
-    std :: cout<<" between "<<point1[0]<<" ,"<<point1[1]<<" and";
-    std :: cout<<" between "<<point2[0]<<" ,"<<point2[1]<<std:: endl;
     
     return asin (param) * 180.0 / PI;
 }
 
-bool inside_test(int a){
+bool outside_test(int a){
     for (int i = 0; i < n-1; i++){
         if (cross_product_angle(test_points[a], vert[i], vert[i+1]) > 0)
             angle = angle + dot_product_angle(test_points[a], vert[i], vert[i+1]);
@@ -225,27 +217,13 @@ bool inside_test(int a){
     else
         angle = angle - dot_product_angle(test_points[a], vert[n-1], vert[0]);
     
-    if ( abs(angle) == 360 ){
+    if ( (abs(angle) <= 1 && abs(angle) -1)){
+        std:: cout<<"total angle is "<<angle<<". Color should be red"<<std:: endl;
         angle = 0;
         return true;
     }
     else{
-        angle =  0;
-        return false;
-    }
-    
-    
-}
-
-bool outside_test(int a){
-    for (int i = 0; i < n-1; i++)
-        angle = angle + cross_product_angle(test_points[a], vert[i], vert[i+1]);
-    angle = angle + cross_product_angle(test_points[a], vert[n-1], vert[0]);
-    if ( angle == 0 ){
-        angle = 0;
-        return true;
-    }
-    else{
+        std:: cout<<"total angle is "<<angle<<". Color should be green"<<std:: endl;
         angle =  0;
         return false;
     }
@@ -257,11 +235,7 @@ int main(int argc, char ** argv){
     int test1[1][2] = {{0,0}};
     int test2[1][2] = {{-6,-2}};
     int test3[1][2] = {{2,88}};
-
-    //std :: cout<< cross_product(test1[0], test2[0], test3[0]);
-    std :: cout<< dot_product_angle(test1[0], test3[0], test2[0]);
-    std :: cout<< cross_product_angle(test1[0], test3[0], test2[0]);
-    
+   
     glutInit(& argc, argv);
     glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
     glutInitWindowSize(width, height);
