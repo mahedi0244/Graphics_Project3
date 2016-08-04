@@ -1,10 +1,10 @@
+#include <stdlib.h>
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
 #include <GL/glut.h>
 #endif
 #include <math.h>
-#include <stdlib.h>
 #define PI 3.14159265
 
 int width = 400,height = 600,vert [100][2], test_points[100][2],n = 0,k=0,
